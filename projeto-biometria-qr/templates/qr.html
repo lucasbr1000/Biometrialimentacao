@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>QR Code</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script>
+        setTimeout(function(){
+            window.location.href = "/";
+        }, 4000);
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h2>QR Code</h2>
+        <img src="{{ qr_code }}" alt="QR Code" style="max-width:300px;">
+    </div>
+</body>
+</html>
