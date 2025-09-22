@@ -1,3 +1,9 @@
+from flask import Flask, request, jsonify, render_template
+from fido2.server import Fido2Server
+from fido2.webauthn import PublicKeyCredentialRpEntity
+
+app = Flask(__name__)
+
 # WebAuthn: register options (client asks to register credential for a given user id)
 @app.route("/webauthn/register/options", methods=["POST"])
 def web_register_options():
