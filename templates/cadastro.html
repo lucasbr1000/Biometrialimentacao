@@ -1,33 +1,29 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
-<title>Cadastro - Biometria QR</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>Cadastro</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-  <div class="wrapper">
-    <div class="card">
-      <h2>Cadastrar nova pessoa</h2>
-      <form id="formCadastro" enctype="multipart/form-data">
-        <label>PIN numérico (único)</label>
-        <input type="password" name="pin" id="pin" inputmode="numeric" required>
+  <div class="container">
+    <h2>Cadastro de Usuário</h2>
+    
+    <form id="cadastroForm" onsubmit="salvarCadastro(event)">
+      <label>PIN:</label>
+      <input type="password" id="pin" required minlength="4" maxlength="8">
 
-        <label>Imagem (obrigatório)</label>
-        <input type="file" name="imagem" id="imagem" accept="image/*" required>
+      <label>Imagem:</label>
+      <input type="file" id="imagem" accept="image/*" required>
 
-        <button type="submit">Cadastrar e salvar</button>
-      </form>
+      <button type="button" onclick="cadastrarBiometria()">Cadastrar Biometria</button>
+      <br><br>
+      <button type="submit">Salvar</button>
+    </form>
 
-      <div style="margin-top:12px;">
-        <button id="activateBio" disabled>Ativar Biometria (após cadastro)</button>
-      </div>
-
-      <div id="cadMsg" class="msg"></div>
-    </div>
+    <a href="/">Voltar</a>
   </div>
 
-<script src="{{ url_for('static', filename='script.js') }}"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
