@@ -1,12 +1,33 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-  <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <meta charset="UTF-8">
+    <title>QR Code</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: Arial, sans-serif;
+            margin-top: 50px;
+        }
+        img {
+            max-width: 200px;
+            margin: 10px;
+        }
+    </style>
+    <script>
+        setTimeout(() => {
+            window.location.href = "/";
+        }, 4000); // 4 segundos
+    </script>
 </head>
 <body>
-  <h2>QR Code válido por 4 segundos</h2>
-  <img id="qr" src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
+    <h2>Bem-vindo!</h2>
+    <p>Esse QR ficará visível por 4 segundos.</p>
+
+    {% if foto %}
+        <img src="{{ url_for('static', filename='uploads/' + foto) }}" alt="Foto do usuário">
+    {% endif %}
+
+    <img src="data:image/png;base64,{{ qr_code }}" alt="QR Code">
 </body>
 </html>
