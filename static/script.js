@@ -1,94 +1,41 @@
-// ---------- CADASTRO ----------
-async function registrarBiometria(username) {
-  const publicKey = {
-    challenge: new Uint8Array(32),
-    rp: { name: "Projeto Biometria QR" },
-    user: {
-      id: new Uint8Array(16),
-      name: username,
-      displayName: username
-    },
-    pubKeyCredParams: [{ alg: -7, type: "public-key" }],
-    authenticatorSelection: { authenticatorAttachment: "platform", userVerification: "required" },
-    timeout: 60000,
-    attestation: "none"
-  };
-
-  const credential = await navigator.credentials.create({ publicKey });
-
-  const publicKeyPem = await exportPublicKey(credential.response.getPublicKey());
-  const credentialId = btoa(String.fromCharCode(...new Uint8Array(credential.rawId)));
-
-  await fetch("/webauthn/register", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      username: username,
-      credential: {
-        id: credentialId,
-        publicKey: publicKeyPem
-      }
-    })
-  });
-
-  alert("Biometria cadastrada com sucesso!");
-  window.location.href = "/";
-}
-
-// ---------- LOGIN ----------
-async function loginBiometria() {
-  const username = document.getElementById("username").value;
-  if (!username) {
-    alert("Digite o usuário para login biométrico");
-    return;
-  }
-
-  const resp = await fetch(`/login-bio/${username}`);
-  const options = await resp.json();
-  if (options.error) {
-    alert(options.error);
-    return;
-  }
-
-  const assertion = await navigator.credentials.get({
-    publicKey: {
-      challenge: Uint8Array.from(atob(options.challenge), c => c.charCodeAt(0)),
-      allowCredentials: [{
-        id: Uint8Array.from(atob(options.credential_id), c => c.charCodeAt(0)),
-        type: "public-key"
-      }],
-      userVerification: "required"
+async function cadastrarBiometria() {
+    if (!("credentials" in navigator)) {
+        alert("Seu navegador não suporta WebAuthn!");
+        return;
     }
-  });
 
-  const signature = btoa(String.fromCharCode(...new Uint8Array(assertion.response.signature)));
+    try {
+        let cred = await navigator.credentials.create({
+            publicKey: {
+                challenge: new Uint8Array([ // mock challenge
+                    0x8C, 0xFA, 0xDD, 0x01
+                ]),
+                rp: { name: "Biometria QR App" },
+                user: {
+                    id: new Uint8Array([1, 2, 3, 4]),
+                    name: "usuario@teste.com",
+                    displayName: "Usuário"
+                },
+                pubKeyCredParams: [{ type: "public-key", alg: -7 }],
+                authenticatorSelection: { authenticatorAttachment: "platform" },
+                timeout: 60000,
+                attestation: "direct"
+            }
+        });
 
-  const verify = await fetch("/verify-bio", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: username, signature: signature })
-  });
+        console.log("Credenciais geradas:", cred);
 
-  const result = await verify.json();
-  if (result.status === "ok") {
-    window.location.href = "/qr";
-  } else {
-    alert("Falha no login biométrico");
-  }
+        // Aqui deveria enviar pro backend
+        await fetch("/register_webauthn", {
+            method: "POST",
+            body: JSON.stringify({ id: cred.id }),
+            headers: { "Content-Type": "application/json" }
+        });
+
+        alert("Biometria cadastrada com sucesso!");
+    } catch (err) {
+        console.error(err);
+        alert("Erro ao cadastrar biometria");
+    }
 }
 
-// ---------- UTILS ----------
-async function exportPublicKey(key) {
-  const spki = await window.crypto.subtle.exportKey("spki", key);
-  const pem = `-----BEGIN PUBLIC KEY-----\n${btoa(String.fromCharCode(...new Uint8Array(spki)))}\n-----END PUBLIC KEY-----`;
-  return pem;
-}
-
-// ---------- QR AUTO-REDIRECT ----------
-window.onload = function() {
-  if (document.getElementById("qr")) {
-    setTimeout(() => {
-      window.location.href = "/";
-    }, 4000);
-  }
-}
