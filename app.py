@@ -19,8 +19,12 @@ UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
 RP_ID = os.environ.get("RP_ID", "localhost")
 ORIGIN = os.environ.get("ORIGIN", "http://localhost:5000")
 
-rp = PublicKeyCredentialRpEntity(RP_ID, "Biometria QR App")
+rp = PublicKeyCredentialRpEntity(
+    id=RP_ID,
+    name="Biometria QR App"
+)
 server = Fido2Server(rp)
+
 
 app = Flask(__name__, static_folder="static", template_folder="templates")
 app.config["SESSION_TYPE"] = "filesystem"
