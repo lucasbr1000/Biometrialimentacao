@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <h2>Coloque o dedo ou digite o PIN</h2>
+
+    <div id="pin-display"></div>
+    
+    <div class="keypad">
+      <button onclick="addDigit('1')">1</button>
+      <button onclick="addDigit('2')">2</button>
+      <button onclick="addDigit('3')">3</button>
+      <button onclick="addDigit('4')">4</button>
+      <button onclick="addDigit('5')">5</button>
+      <button onclick="addDigit('6')">6</button>
+      <button onclick="addDigit('7')">7</button>
+      <button onclick="addDigit('8')">8</button>
+      <button onclick="addDigit('9')">9</button>
+      <button onclick="clearPin()">⌫</button>
+      <button onclick="addDigit('0')">0</button>
+      <button onclick="loginPin()">OK</button>
+    </div>
+
+    <div class="buttons">
+      <button onclick="loginBiometria()">Entrar com Biometria</button>
+      <a href="/cadastro"><button>Cadastrar novo usuário</button></a>
+    </div>
+  </div>
+
+  <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
